@@ -133,8 +133,8 @@ public class DdmCustomNotificationSender extends DDMFormEmailNotificationSender 
 				continue;
 			}
 
-			String isVacancyForm = _getByFieldReference(ddmFormInstanceRecord.getDDMFormValues(), ddmFormInstance.getFormInstanceId(), EMAIl_FIELD_REFERENCE);
-			if(Validator.isNull(isVacancyForm)){
+			String isEmailFieldReference = _getByFieldReference(ddmFormInstanceRecord.getDDMFormValues(), ddmFormInstance.getFormInstanceId(), EMAIl_FIELD_REFERENCE);
+			if(Validator.isNotNull(isEmailFieldReference)){
 				if (getFieldProperties(ddmFormFieldValues, locale).get("hideField").toString().equals("false")) {
 					fields.add(getFieldProperties(ddmFormFieldValues, locale));
 				}
@@ -185,11 +185,16 @@ public class DdmCustomNotificationSender extends DDMFormEmailNotificationSender 
 
 
 		Template template = null;
-		String isVacancyForm = _getByFieldReference(ddmFormInstanceRecord.getDDMFormValues(), ddmFormInstance.getFormInstanceId(), EMAIl_FIELD_REFERENCE);
-		if(Validator.isNotNull(isVacancyForm)){
+		String vacancyEmailAddress = _getByFieldReference(ddmFormInstanceRecord.getDDMFormValues(), ddmFormInstance.getFormInstanceId(), VACANCY_EMAIl_FIELD_REFERENCE);
+		String emailAddress = _getByFieldReference(ddmFormInstanceRecord.getDDMFormValues(), ddmFormInstance.getFormInstanceId(), EMAIl_FIELD_REFERENCE);
+		if(Validator.isNotNull(vacancyEmailAddress)){
 			template = TemplateManagerUtil.getTemplate(
 					TemplateConstants.LANG_TYPE_FTL,
 					_getTemplateResource(_TEMPLATE_VACANCY_PATH), false);
+		} else if (Validator.isNotNull(emailAddress)) {
+			template = TemplateManagerUtil.getTemplate(
+					TemplateConstants.LANG_TYPE_FTL,
+					_getTemplateResource(_TEMPLATE_ORDER_WORKSHOP_PATH), false);
 		} else {
 			template = TemplateManagerUtil.getTemplate(
 					TemplateConstants.LANG_TYPE_FTL,
@@ -284,7 +289,8 @@ public class DdmCustomNotificationSender extends DDMFormEmailNotificationSender 
 
 
 		String defaultEmailToAddress = StringPool.BLANK;
-		String vacancyEmailAddress = _getByFieldReference(ddmFormInstanceRecord.getDDMFormValues(), ddmFormInstance.getFormInstanceId(), EMAIl_FIELD_REFERENCE);
+		String vacancyEmailAddress = _getByFieldReference(ddmFormInstanceRecord.getDDMFormValues(), ddmFormInstance.getFormInstanceId(), VACANCY_EMAIl_FIELD_REFERENCE);
+		String emailAddress = _getByFieldReference(ddmFormInstanceRecord.getDDMFormValues(), ddmFormInstance.getFormInstanceId(), EMAIl_FIELD_REFERENCE);
 
 
 		DDMFormInstanceSettings formInstancetings =
@@ -299,6 +305,9 @@ public class DdmCustomNotificationSender extends DDMFormEmailNotificationSender 
 		if(Validator.isNotNull(vacancyEmailAddress)){
 			return GetterUtil.getString(
 					vacancyEmailAddress, defaultEmailToAddress);
+		} else if (Validator.isNotNull(emailAddress)) {
+			return GetterUtil.getString(
+					emailAddress, defaultEmailToAddress);
 		} else {
 			return GetterUtil.getString(
 					formInstancetings.emailToAddress(), defaultEmailToAddress);
@@ -519,8 +528,8 @@ public class DdmCustomNotificationSender extends DDMFormEmailNotificationSender 
 			DDMFormInstanceRecord ddmFormInstanceRecord)
 			throws Exception {
 
-
 		Locale locale = _getLocale(ddmFormInstance, serviceContext);
+		template.put("locale", locale);
 		template.put("formName", ddmFormInstance.getName(locale));
 		template.put("formInstanceRecordId" ,ddmFormInstanceRecord.getFormInstanceRecordId());
 		template.put(
@@ -675,6 +684,11 @@ public class DdmCustomNotificationSender extends DDMFormEmailNotificationSender 
 	private static final String _TEMPLATE_VACANCY_PATH =
 			"/META-INF/resources/notification/vacancy_form_notification.ftl";
 
+	private static final String _TEMPLATE_ORDER_WORKSHOP_PATH =
+			"/META-INF/resources/notification/order_and_workshop_notification.ftl";
+
+
+
 	private static final Log _log = LogFactoryUtil.getLog(
 			DdmCustomNotificationSender.class);
 
@@ -682,6 +696,7 @@ public class DdmCustomNotificationSender extends DDMFormEmailNotificationSender 
 //	private DDMFormFieldTypeServicesRegistry _ddmFormFieldTypeServicesRegistry;
 
 	private static final String EMAIl_FIELD_REFERENCE = "Email";
+	private static final String VACANCY_EMAIl_FIELD_REFERENCE = "VacancyEmail";
 
 
 	@Reference

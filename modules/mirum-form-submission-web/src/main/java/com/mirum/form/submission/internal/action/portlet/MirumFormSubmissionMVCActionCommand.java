@@ -206,8 +206,6 @@ public class MirumFormSubmissionMVCActionCommand extends BaseMVCActionCommand {
             }
         }
 
-        _log.info("Current Language = " + ddmFormInstance.getDDMForm().getDDMFormFields().get(0).isLocalizable());
-
         String[] productType = new String[]{primaryProduct};
         List<String>    productList = null;
 
@@ -462,9 +460,12 @@ public class MirumFormSubmissionMVCActionCommand extends BaseMVCActionCommand {
                         "orderId"
                 )) {
 
-//                    LocalizedValue localizedValue = new LocalizedValue(themeDisplay.getLocale());
+//                        LocalizedValue localizedValue = new LocalizedValue(themeDisplay.getLocale());
 //                    LocalizedValue localizedValue = new LocalizedValue(LocaleUtil.getDefault());
                     LocalizedValue localizedValue = new LocalizedValue(LocaleUtil.fromLanguageId(currentLanguage));
+
+                    _log.info("locale default: " + LocaleUtil.getDefault());
+                    _log.info("localized value for erc: " + localizedValue);
 
                     for (Locale availableLocale : ddmForm.getAvailableLocales()) {
                         _log.info("availableLocale for erc: " + availableLocale);
@@ -813,8 +814,7 @@ public class MirumFormSubmissionMVCActionCommand extends BaseMVCActionCommand {
             ServiceContext serviceContext, long userId)
             throws Exception {
 
-        //CUSTOM
-
+        // CUSTOM
         DDMFormInstanceRecord ddmFormInstanceRecord = null;
 
         long ddmFormInstanceRecordId = ParamUtil.getLong(
@@ -856,9 +856,7 @@ public class MirumFormSubmissionMVCActionCommand extends BaseMVCActionCommand {
                         false, ddmFormValues, serviceContext);
             }
         }
-
         AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(DDMFormInstanceRecord.class.getName(), ddmFormInstanceRecord.getFormInstanceRecordId());
-        _log.info("Asset Entry Title ==> " + assetEntry.getTitle() + " " + ddmFormInstanceRecord.getFormInstanceRecordId());
         assetEntry.setTitle(assetEntry.getTitle() + " " + ddmFormInstanceRecord.getFormInstanceRecordId());
         AssetEntryLocalServiceUtil.updateAssetEntry(assetEntry);
     }
