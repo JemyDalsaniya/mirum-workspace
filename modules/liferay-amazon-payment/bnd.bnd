@@ -1,0 +1,3 @@
+Bundle-Name: Amazon Payment Implementation
+Bundle-SymbolicName: com.liferay.commerce.payment.method.amazon
+Bundle-Version: 1.0.0

@@ -1,0 +1,5 @@
+Bundle-Name: OverridePasswordReminder
+Bundle-SymbolicName: com.liferay.password.reminder.override
+Bundle-Version: 1.0.0
+Export-Package: com.liferay.support.constants
+-sources: true

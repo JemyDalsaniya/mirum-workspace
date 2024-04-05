@@ -1,0 +1,4 @@
+Bundle-Name: mirum-custom-resource-bundle
+Bundle-SymbolicName: mirum.custom.resource.bundle
+Bundle-Version: 1.0.0
+Export-Package: mirum.custom.resource.bundle.api

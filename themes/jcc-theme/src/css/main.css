@@ -5526,7 +5526,7 @@ html {
 }
 .jcc-share-link .sharethis-inline-share-buttons {
   top: -37px !important;
-  /*opacity: 0 !important;*/
+  opacity: 0 !important;
   pointer-events: none;
   display: flex !important;
   transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out !important;

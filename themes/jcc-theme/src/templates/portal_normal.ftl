@@ -31,7 +31,57 @@
 	}
 	}
 
+	   function handleSearchChange() {
+       		 // Check if an element with class "taglib-empty-result-message" exists
+			if ($jcc('.taglib-empty-result-message').length > 0) {
+				// If it exists, add "display: none" to elements with class "portlet-header"
+				$jcc('.portlet-search-results .portlet-header').css('display', 'none');
+				// remove border-top color of portlet-content-container
+				$jcc('.portlet-search-results .portlet-content-container').css('border-top','2px solid transparent')
+			}
+
+			 // Check if the element with class pagination-results exists
+            if ($jcc(".pagination-results").length > 0) {
+                // Get the text from the pagination-results div
+                var originalText = $jcc(".pagination-results").text();
+                // Replace Arabic digits with English digits
+                var convertedText = originalText.replace(/١/g, "1")
+                                               .replace(/٢/g, "2")
+                                               .replace(/٣/g, "3")
+                                               .replace(/٤/g, "4")
+                                               .replace(/٥/g, "5")
+                                               .replace(/٦/g, "6")
+                                               .replace(/٧/g, "7")
+                                               .replace(/٨/g, "8")
+                                               .replace(/٩/g, "9")
+                                               .replace(/٠/g, "0");
+
+                // Update the content of the pagination-results div
+                $jcc(".pagination-results").text(convertedText);
+            }
+			
+    		if ($jcc(".portlet-tag-facet").length === 0) {
+        			// The element with class "portlet-tag-facet" does not exist, so remove margins and paddings.
+        			$jcc(".portlet-search-results").addClass('no-padding-top');
+			}
+		}
+	// override window.history callback
+	(function(history){
+    const pushState = history.pushState;
+    history.pushState = function(state) {
+        if (typeof history.onpushstate == "function") {
+            history.onpushstate({state: state});
+        }
+		// call function to execute styling on history params change
+        setTimeout(()=>handleSearchChange(),1500);
+        return pushState.apply(history, arguments);
+    }
+	})(window.history);
+
+
 	$jcc(document).ready(function () {
+		// call function to execute styling on history params change
+        setTimeout(()=>handleSearchChange(),1500);
 		// Select all elements with the class "list-group-item" and bind a click event handler
    		 $jcc('.list-group-item').click(function () {
         // Find the anchor link within the clicked list item
@@ -40,7 +90,7 @@
             // Programmatically trigger a click event on the anchor link
             anchorLink[0].click();
        		}
-   		});
+   		});      
 	})
 	
 
@@ -83,27 +133,7 @@
 		}
 	});
 	}
-	/*function setToggleClass() {
-		const fragments = document.querySelectorAll('.jcc-share-link.jcc-stop-prop');
-		if (fragments.length > 0) {
-			fragments.forEach((fragment) => {
-				let flag = fragment.classList.contains("show-share");
-				// const image = fragment.querySelector("picture")
-				fragment.addEventListener('click', function () {
-					if (flag) {
-						fragment.classList.remove('show-share');
-						flag = false;
-					} else {
-						fragment.classList.add('show-share');
-						flag = true;
-					}
-				});
-			});
-		}
-	}
-	setTimeout(function () {
-		setToggleClass()
-	}, 1000);*/
+
 	setTimeout(function(){
 		if($jcc('.jcc-share-link').length > 0){
 			$jcc('.jcc-share-link').on('click',function(){
@@ -111,7 +141,6 @@
 			});
 		}
 	} , 1000);
-
 	</script>
     <script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=63187c5cfd193a0013760368&product=inline-share-buttons' async='async'></script>	<style>
 		.has-edit-mode-menu [data-aos]{

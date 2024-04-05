@@ -1,0 +1,4 @@
+Bundle-Name: com-mirum-commerce-order-content-web-fragment
+Bundle-SymbolicName: com.mirum.commerce.order.content.web.fragment
+Bundle-Version: 1.0.0
+Fragment-Host: com.liferay.commerce.order.content.web;bundle-version="4.0.63"
